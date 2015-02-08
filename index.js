@@ -40,9 +40,13 @@ function search(options, callback) {
       return results.indexOf(result) === -1;
     });
 
-    newResults.forEach(function(result) {
-      callback(null, result);
-    });
+    if (options.oneCallbackForAllResults) {
+      callback(null, newResults);
+    } else {
+      newResults.forEach(function(result) {
+        callback(null, result);
+      });
+    }
 
     if(newResults.length === 0) {
       return;
