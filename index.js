@@ -9,6 +9,7 @@ function search(options, callback) {
   var solver = options.solver;
   var params = options.params || {};
   var results = [];
+  var currentResults;
 
   params.hl = params.hl || options.lang || 'en';
 
@@ -29,7 +30,11 @@ function search(options, callback) {
       return;
     }
 
-    var currentResults = extractResults(body);
+    if(options.extractResults && typeof options.extractResults === "function") {
+      currentResults = options.extractResults(body);
+    } else {
+      currentResults = extractResults(body);
+    }
 
     var newResults = currentResults.filter(function(result) {
       return results.indexOf(result) === -1;
