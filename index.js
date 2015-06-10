@@ -63,7 +63,7 @@ function search(options, callback) {
 
   function getPage(params, callback) {
     session.get({
-        uri: 'https://' + host + '/search',
+        uri: 'http://' + host + '/search',
         qs: params,
         followRedirect: false
       }, 
