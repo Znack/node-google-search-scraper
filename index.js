@@ -8,7 +8,9 @@ function search(options, callback) {
   var host = options.host || 'www.google.com';
   var solver = options.solver;
   var params = options.params || {};
-  var results = [];		
+  var results = {
+    foundPages: [],
+  };	
   var currentResults;
 
   params.hl = params.hl || options.lang || 'en';
@@ -36,23 +38,23 @@ function search(options, callback) {
       currentResults = extractResults(body);
     }
 
-    var newResults = currentResults.filter(function(result) {
-      return results.indexOf(result) === -1;
+    var newResults = currentResults.foundPages.filter(function(result) {
+      return results.foundPages.indexOf(result) === -1;
     });
 
     if (options.oneCallbackForAllResults) {
       callback(null, newResults);
     } else {
-      newResults.forEach(function(result) {
+      newResults.foundPages.forEach(function(result) {
         callback(null, result);
       });
     }
 
-    if(newResults.length === 0) {
+    if(newResults.foundPages.length === 0) {
       return;
     }
 
-    results = results.concat(newResults);
+    results.foundPages = results.foundPages.concat(newResults);
 
     if(!options.limit || results.length < options.limit) {
       params.start = results.length;
@@ -85,13 +87,15 @@ function search(options, callback) {
   }
 
   function extractResults(body) {
-    var results = [];
+    var results = {
+      foundPages: [],
+    };
     var $ = cheerio.load(body);
 
     $('.g h3 a').each(function(i, elem) {
       var parsed = url.parse(elem.attribs.href, true);
       if (parsed.pathname === '/url') {
-        results.push(parsed.query.q);
+        results.foundPages.push(parsed.query.q);
       }
     });
 
