@@ -38,23 +38,19 @@ function search(options, callback) {
       currentResults = extractResults(body);
     }
 
-    var newResults = currentResults.foundPages.filter(function(result) {
-      return results.foundPages.indexOf(result) === -1;
-    });
-
     if (options.oneCallbackForAllResults) {
-      callback(null, newResults);
+      callback(null, currentResults);
     } else {
-      newResults.foundPages.forEach(function(result) {
+      currentResults.foundPages.forEach(function(result) {
         callback(null, result);
       });
     }
 
-    if(newResults.foundPages.length === 0) {
+    if(currentResults.foundPages.length === 0) {
       return;
     }
 
-    results.foundPages = results.foundPages.concat(newResults);
+    results.foundPages = results.foundPages.concat(currentResults);
 
     if(!options.limit || results.length < options.limit) {
       params.start = results.length;
