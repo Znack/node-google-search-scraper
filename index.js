@@ -32,6 +32,11 @@ function search(options, callback) {
       return;
     }
 
+    if (body.indexOf("it's really you sending the requests, and not a robot") != -1) {
+      // we've got google captcha now
+      return solver.solve();
+    }
+
     if(options.extractResults && typeof options.extractResults === "function") {
       currentResults = options.extractResults(body);
     } else {
