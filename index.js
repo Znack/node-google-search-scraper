@@ -32,7 +32,10 @@ function search(options, callback) {
       return;
     }
 
-    if (body.indexOf("it's really you sending the requests, and not a robot") != -1) {
+    if (
+      body.indexOf("it's really you sending the requests, and not a robot") != -1 ||
+      body.indexOf("but your computer or network may be sending automated queries") != -1
+    ) {
       // we've got google captcha now
       return solver.solve();
     }
