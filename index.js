@@ -1,10 +1,16 @@
 var request = require('request');
 var cheerio = require('cheerio');
 var url     = require('url');
+var session = request.defaults({ jar : true });
+
+session.get({
+    uri: 'https://www.google.com/ncr'
+  },
+  function(err, res) {}
+) // create request and remember that there should not be country specific redirect
 
 function search(options, callback) {
 
-  var session = request.defaults({ jar : true });
   var host = options.host || 'www.google.com';
   var solver = options.solver;
   var params = options.params || {};
@@ -69,8 +75,11 @@ function search(options, callback) {
 
   function getPage(params, callback) {
     session.get({
-        uri: 'http://' + host + '/search',
+        uri: 'https://' + host + '/search',
         qs: params,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A'
+        },
         followRedirect: false
       }, 
       function(err, res) {
